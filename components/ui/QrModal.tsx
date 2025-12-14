@@ -6,7 +6,8 @@ interface QrModalProps {
 }
 
 const QrModal: React.FC<QrModalProps> = ({ onClose }) => {
-    const appUrl = "https://asistente-m-dico-para-internos-web-788092376733.us-west1.run.app/";
+    // URL actualizada para GitHub Pages
+    const appUrl = "https://Medicazo100.github.io/asistente-medico/";
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${appUrl}`;
 
     useEffect(() => {

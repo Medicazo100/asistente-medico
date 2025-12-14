@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asistente Médico para Internos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        html.dark ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #718096;
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+         /* Ensure prose styles links correctly */
+        .prose a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .prose a:hover {
+            text-decoration: underline;
+        }
+        .dark .prose-invert a {
+            color: #60a5fa;
+        }
+        /* Hide scrollbar for scroll-picker component */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+     <script>
+        // Apply theme immediately to prevent FOUC (Flash of Unstyled Content)
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+        
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    typography: ({ theme }) => ({
+                        DEFAULT: {
+                            css: {
+                                a: {
+                                    color: theme('colors.blue.600'),
+                                    '&:hover': {
+                                        color: theme('colors.blue.800'),
+                                    },
+                                },
+                            },
+                        },
+                    }),
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'fade-in-slow': 'fadeIn 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'translateY(-10px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            },
+        }
+    </script>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "marked": "https://aistudiocdn.com/marked@^16.4.1"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

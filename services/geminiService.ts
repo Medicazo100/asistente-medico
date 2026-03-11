@@ -185,16 +185,15 @@ export async function generateImage(basePrompt: string, findings?: string): Prom
         ? `Genera una imagen médica diagnóstica precisa de: ${basePrompt}. La imagen DEBE mostrar explícitamente los siguientes hallazgos radiológicos o clínicos: ${findings}. Estilo fotorrealista, calidad alta, anatomía correcta para fines educativos.`
         : `Genera una imagen de alta calidad en estilo fotorrealista, representando: "${basePrompt}". No incluyas texto, etiquetas, ni artefactos irrelevantes en la imagen.`;
 
-    // Using gemini-3-pro-image-preview ("nanobanana pro") as requested for higher quality and better adherence to findings
+    // Using gemini-2.5-flash-image as the default for better compatibility and to avoid 403 errors
     const response = await getAi().models.generateContent({
-        model: 'gemini-3-pro-image-preview',
+        model: 'gemini-2.5-flash-image',
         contents: {
             parts: [{ text: fullPrompt }]
         },
         config: {
             imageConfig: {
-                aspectRatio: "1:1",
-                imageSize: "1K"
+                aspectRatio: "1:1"
             }
         },
     });

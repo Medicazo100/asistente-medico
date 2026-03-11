@@ -100,31 +100,28 @@ const MedicalSimulator: React.FC = () => {
                 const result = resultData.imaging[0];
                 let imageUrl;
                 try {
-                    // Use findings to generate a more accurate image using Nanobanana Pro (Gemini 3 Pro Image)
-                    // FIX: Updated to use the new generateImage function.
+                    // Use findings to generate a more accurate image
                     imageUrl = await generateImage(result.study, result.findings);
                 } catch (imgErr: any) { 
                     console.error("Error generating medical image:", imgErr);
                     const errorMessage = typeof imgErr === 'string' ? imgErr : (imgErr.message || JSON.stringify(imgErr));
 
-                    // Handle API Key issues (403 Permission Denied, 404 Not Found)
-                    if (errorMessage.includes('PERMISSION_DENIED') || errorMessage.includes('403') || errorMessage.includes('does not have permission') || errorMessage.includes('Requested entity was not found')) {
-                         const confirmKey = window.confirm("Para generar imágenes de alta calidad (Nano Banana Pro), se requiere una clave de API con facturación habilitada. ¿Deseas seleccionarla ahora?\n\nPara más información, visita: ai.google.dev/gemini-api/docs/billing");
+                    // Handle API Key issues or other errors
+                    if (errorMessage.includes('PERMISSION_DENIED') || errorMessage.includes('403') || errorMessage.includes('Requested entity was not found')) {
+                         const confirmKey = window.confirm("La generación de imágenes puede requerir una clave de API específica o permisos adicionales. ¿Deseas intentar seleccionar una clave de API diferente?\n\nPara más información, visita: ai.google.dev/gemini-api/docs/billing");
                          if (confirmKey) {
                              try {
                                  await (window as any).aistudio.openSelectKey();
-                                 // Optimistically retry after key selection
                                  imageUrl = await generateImage(result.study, result.findings);
                              } catch(e) {
                                  console.error("Failed to select key or retry generation", e);
-                                 setError("No se pudo seleccionar la clave de API o la generación de imagen falló de nuevo.");
+                                 setError("No se pudo completar la generación de la imagen.");
                              }
                          } else {
-                            setError("Se necesita una clave de API válida para generar la imagen del estudio.");
+                            setError("No se pudo generar la imagen del estudio debido a restricciones de permisos.");
                          }
                     } else {
-                        // Generic error for other issues
-                        setError("Ocurrió un error inesperado al generar la imagen médica.");
+                        setError("Ocurrió un error al generar la imagen médica.");
                     }
                 }
                 setImagingResults(prev => [...prev.filter(r => r.study !== study), { ...result, imageUrl }]);

@@ -55,30 +55,6 @@ const ImageGenerator: React.FC = () => {
         setIsLoading(false);
     };
 
-    if (!isKeySelected) {
-        return (
-            <Card className="max-w-2xl mx-auto text-center">
-                <h2 className="text-2xl font-bold text-blue-800 dark:text-cyan-300 mb-4">🖼️ Generador de Imágenes</h2>
-                <p className="mb-4 text-gray-600 dark:text-gray-400">
-                    Esta función utiliza modelos de IA avanzados que requieren una clave de API con facturación habilitada.
-                </p>
-                <p className="mb-6 text-sm text-gray-500 dark:text-gray-500">
-                    Para obtener más información sobre la facturación, visita la{' '}
-                    <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                        documentación de facturación de la API de Gemini
-                    </a>.
-                </p>
-                <button
-                    onClick={handleSelectKey}
-                    className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors dark:bg-purple-600 dark:hover:bg-purple-700"
-                >
-                    Seleccionar Clave de API
-                </button>
-                 {error && <div className="mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">{error}</div>}
-            </Card>
-        );
-    }
-
     return (
         <Card className="max-w-2xl mx-auto">
             <div className="flex justify-between items-center mb-4">
@@ -93,7 +69,19 @@ const ImageGenerator: React.FC = () => {
                  )}
             </div>
             
-            {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <p>{error}</p>
+                    {(error.includes('permisos') || error.includes('clave')) && (
+                        <button 
+                            onClick={handleSelectKey}
+                            className="mt-2 text-sm font-bold underline hover:no-underline"
+                        >
+                            Seleccionar otra clave de API
+                        </button>
+                    )}
+                </div>
+            )}
             
             <div className="space-y-4 mb-6">
                 <p className="text-gray-600 dark:text-gray-400">Describe la imagen que quieres crear. Puedes generar desde ilustraciones médicas hasta arte conceptual.</p>
@@ -104,7 +92,7 @@ const ImageGenerator: React.FC = () => {
                         onChange={e => setPrompt(e.target.value)}
                         placeholder="Ej: Un cerebro humano con redes neuronales iluminadas"
                         className="w-full px-4 py-3 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg"
-                        onKeyDown={e => e.key === 'Enter' && handleGenerate}
+                        onKeyDown={e => e.key === 'Enter' && handleGenerate()}
                     />
                     <button
                         onClick={handleGenerate}
@@ -127,6 +115,19 @@ const ImageGenerator: React.FC = () => {
                     >
                         Descargar
                     </a>
+                </div>
+            )}
+            {!isKeySelected && !imageUrl && !isLoading && (
+                <div className="mt-8 pt-6 border-t dark:border-slate-700 text-center">
+                    <p className="text-xs text-gray-500 mb-2">
+                        Nota: La generación de imágenes puede requerir una clave de API con facturación.
+                    </p>
+                    <button 
+                        onClick={handleSelectKey}
+                        className="text-xs text-blue-600 hover:underline dark:text-cyan-400"
+                    >
+                        Configurar clave de API
+                    </button>
                 </div>
             )}
         </Card>

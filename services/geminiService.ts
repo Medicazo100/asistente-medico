@@ -5,7 +5,7 @@ function getAi(): GoogleGenAI {
     // CRITICAL: Create a new instance every time to ensure the latest API key
     // selected via window.aistudio.openSelectKey() is used.
     // Do not cache the instance.
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    return new GoogleGenAI({ apiKey: process.import.meta.env.VITE_API_KEY });
 }
 
 // Helper function for robust JSON parsing
